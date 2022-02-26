@@ -1,24 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { Users } from 'src/entities/Users';
 
-export class JoinRequestDto {
-  @ApiProperty({
-    example: 'hlkim266@gmail.com',
-    description: 'e-mail',
-    required: true,
-  })
-  public email: string;
-
-  @ApiProperty({
-    example: '니니',
-    description: '닉네임',
-    required: true,
-  })
-  public nickname: string;
-
-  @ApiProperty({
-    example: 'helloworld',
-    description: '비밀번호',
-    required: true,
-  })
-  public password: string;
-}
+//Picktype: 공통으로 선언한 부분을 재선언하지않고 그냥 가져와서 사용할 수 있음
+// (비슷한거: omitTYpe, ParitalType .. )
+export class JoinRequestDto extends PickType(Users, [
+  'email',
+  'nickname',
+  'password',
+] as const) {}

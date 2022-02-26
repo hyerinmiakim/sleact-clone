@@ -24,6 +24,7 @@ export class WorkspaceMembers {
 
   @Column('int', { primary: true, name: 'UserId' })
   UserId: number;
+  createForeignKeyConstraints: false;
 
   @Column('datetime', { name: 'loggedInAt', nullable: true })
   loggedInAt: Date | null;
