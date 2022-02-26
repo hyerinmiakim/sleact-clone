@@ -4,14 +4,10 @@ import { UsersService } from './users/users.service';
 @Injectable()
 export class AppService {
   constructor(private usersService: UsersService) {}
-  async getHello() {
-    this.usersService.getUsers();
-    this.getWow();
+  async getHello(): Promise<string> {
     return process.env.SECRET;
   }
-  async getWow() {};
-  /*async postUser(): string {
-    const user = await User.create();
-    return user;
-  }*/
+  async postUser(): Promise<string> {
+    return 'hello post';
+  }
 }

@@ -5,8 +5,6 @@ import { Channels } from '../entities/Channels';
 import { Users } from '../entities/Users';
 import { WorkspaceMembers } from '../entities/WorkspaceMembers';
 import { Workspaces } from '../entities/Workspaces';
-import { WorkspacesService } from './workspaces.service';
-import { WorkspacesController } from './workspaces.controller';
 
 @Module({
   imports: [
@@ -18,7 +16,5 @@ import { WorkspacesController } from './workspaces.controller';
       ChannelMembers,
     ]),
   ],
-  providers: [WorkspacesService],
-  controllers: [WorkspacesController],
 })
 export class WorkspacesModule {}

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
 // 공통 주소
@@ -12,8 +12,8 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  /*@Post()
-  postUser(): string {
+  @Post()
+  postUser() {
     return this.appService.postUser();
-  }*/
+  }
 }

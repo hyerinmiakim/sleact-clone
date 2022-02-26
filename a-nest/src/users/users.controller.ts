@@ -2,21 +2,19 @@ import {
   Controller,
   Get,
   Post,
-  Req,
-  Res,
+  Response,
   Body,
-  UseInterceptors,
+  NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
-import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/common/decorators/user.decorator';
-import { UserDto } from 'src/common/dto/user.dto';
-import { UndefindeToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
-import { Users } from 'src/entities/Users';
+import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '../common/decorators/user.decorator';
+import { Users } from '../entities/Users';
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 
 //@UseInterceptors(UndefindeToNullInterceptor)
-@ApiTags('USER')
+@ApiTags('USERS')
 @Controller('api/users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -28,22 +26,35 @@ export class UsersController {
     return user || false;
   }
 
+  @ApiOperation({ summary: '로그인' })
+  @Post('login')
+  async logIn(@User() user: Users) {
+    return user;
+  }
+
   @ApiOperation({ summary: '회원가입' })
   @Post()
   async join(@Body() data: JoinRequestDto) {
-    await this.usersService.join(data.email, data.nickname, data.password);
-  }
-
-  @ApiOperation({ summary: '로그인' })
-  @Post('login')
-  logIn(@User() user: Users) {
-    return user;
+    const user = this.usersService.findByEmail(data.email);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const result = await this.usersService.join(
+      data.email,
+      data.nickname,
+      data.password,
+    );
+    if (result) {
+      return 'ok';
+    } else {
+      throw new ForbiddenException();
+    }
   }
 
   @ApiCookieAuth('connect.sid')
   @ApiOperation({ summary: '로그아웃' })
   @Post('logout')
-  async logOut(@Res() res) {
+  async logOut(@Response() res) {
     res.clearCookie('connect.sid', { httpOnly: true });
     return res.send('ok');
   }

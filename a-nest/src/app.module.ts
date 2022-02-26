@@ -19,6 +19,7 @@ import { Mentions } from './entities/Mentions';
 import { Users } from './entities/Users';
 import { WorkspaceMembers } from './entities/WorkspaceMembers';
 import { Workspaces } from './entities/Workspaces';
+import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
@@ -51,7 +52,12 @@ import { Workspaces } from './entities/Workspaces';
     WorkspacesModule,
     TypeOrmModule.forFeature([Users]),
   ],
-  controllers: [AppController, DmsController, ChannelsController],
+  controllers: [
+    AppController,
+    DmsController,
+    ChannelsController,
+    UsersController,
+  ],
   providers: [AppService, UsersService, ChannelsService, DmsService],
 })
 export class AppModule implements NestModule {

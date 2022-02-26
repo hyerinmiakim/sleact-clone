@@ -1,22 +1,30 @@
-import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/entities/Users';
-import { Repository } from 'typeorm';
+import { Users } from '../entities/Users';
+import { Connection, Repository } from 'typeorm';
 import { bcrypt } from 'bcrypt';
+import { WorkspaceMembers } from '../entities/WorkspaceMembers';
+import { ChannelMembers } from '../entities/ChannelMembers';
 
 @Injectable()
 export class UsersService {
-  join(email: string, nickname: string, password: string) {
-    throw new Error('Method not implemented.');
-  }
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    @InjectRepository(Users) private usersRepository: Repository<Users>,
   ) {}
-  getUsers() {}
-  async postUsers(email: string, nickname: string, password: string) {
+  async findByEmail(email: string) {
+    return this.usersRepository.findOne({
+      where: { email },
+      select: ['id', 'email', 'password'],
+    });
+  }
+
+  async join(email: string, nickname: string, password: string) {
     if (!email) {
-      // 이메일 없다고 에러
       throw new HttpException('이메일이 없다.', 400);
       return;
     }
@@ -30,7 +38,6 @@ export class UsersService {
     }
     const user = await this.usersRepository.findOne({ where: { email } });
     if (user) {
-      // 이미 존재하는 유저라고 에러 뜨는곳
       throw new UnauthorizedException('이미 존재하는 사용자입니다.'); // 자동으로 401을 넘겨줌
       return;
     }
@@ -40,5 +47,6 @@ export class UsersService {
       nickname,
       password: hashedPassword,
     });
+    return true;
   }
 }
