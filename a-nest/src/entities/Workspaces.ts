@@ -28,7 +28,7 @@ export class Workspaces {
   @Column('varchar', { name: 'name', unique: true, length: 30 })
   name: string;
 
-  @Column('varchar', { name: 'url', unique: true, length: 30 })
+  @Column('varchar', { name: 'email', unique: true, length: 30 })
   url: string;
 
   @CreateDateColumn()

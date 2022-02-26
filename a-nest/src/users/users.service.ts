@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/entities/Users';
 import { Repository } from 'typeorm';
@@ -25,13 +25,13 @@ export class UsersService {
       return;
     }
     if (!password) {
-      throw new HttpException('비밀번호 오류.', 400);
+      throw new BadRequestException('비밀번호 오류.'); //자동으로 400코드 넘겨줌
       return;
     }
     const user = await this.usersRepository.findOne({ where: { email } });
     if (user) {
       // 이미 존재하는 유저라고 에러 뜨는곳
-      throw new Error('이미 존재하는 사용자입니다.');
+      throw new UnauthorizedException('이미 존재하는 사용자입니다.'); // 자동으로 401을 넘겨줌
       return;
     }
     const hashedPassword = await bcrypt.hash(password, 12);
