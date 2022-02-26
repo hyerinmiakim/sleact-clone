@@ -6,6 +6,7 @@ import {
   Body,
   NotFoundException,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '../common/decorators/user.decorator';
@@ -33,9 +34,14 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: '회원가입' })
+  @UseGuards()
   @Post()
   async join(@Body() data: JoinRequestDto) {
-    const user = this.usersService.findByEmail(data.email);
+    const user = this.usersService.join(
+      data.email,
+      data.nickname,
+      data.password,
+    );
     if (!user) {
       throw new NotFoundException();
     }

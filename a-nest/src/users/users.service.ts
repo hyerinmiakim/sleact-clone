@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../entities/Users';
 import { Connection, Repository } from 'typeorm';
-import { bcrypt } from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { WorkspaceMembers } from '../entities/WorkspaceMembers';
 import { ChannelMembers } from '../entities/ChannelMembers';
 
@@ -47,6 +47,6 @@ export class UsersService {
       nickname,
       password: hashedPassword,
     });
-    return true;
+    return undefined;
   }
 }
